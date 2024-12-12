@@ -1,0 +1,27 @@
+import os
+import shutil
+from git import Repo
+
+# Chemin vers le répertoire local contenant les fichiers
+local_directory = r'C:\Users\USER\Desktop\serveur redsonne\bitigames\info'
+
+# Cloner le dépôt GitHub dans un répertoire temporaire
+repo_url = 'https://github.com/revederedstonne64/decrut'
+clone_dir = r'C:\Users\USER\Desktop\temp_repo'
+if not os.path.exists(clone_dir):
+    os.makedirs(clone_dir)
+repo = Repo.clone_from(repo_url, clone_dir)
+
+# Copier les fichiers du répertoire local vers le dépôt cloné
+for filename in os.listdir(local_directory):
+    file_path = os.path.join(local_directory, filename)
+    if os.path.isfile(file_path):
+        shutil.copy(file_path, clone_dir)
+
+# Ajouter, valider et pousser les fichiers vers le dépôt GitHub
+repo.git.add(A=True)
+repo.index.commit('Mise à jour des fichiers')
+origin = repo.remote(name='origin')
+origin.push()
+
+print("Fichiers mis à jour et poussés vers le dépôt GitHub.")
